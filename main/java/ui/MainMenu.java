@@ -1,8 +1,10 @@
 package ui;
 
+import domain.Orders;
 import domain.Pizza;
 import persistence.Database;
 import persistence.DbMenuCardMapper;
+import persistence.DbOrderMapper;
 
 import java.util.List;
 
@@ -14,6 +16,7 @@ public class MainMenu {
 
     private Database database = new Database(USER, PASSWORD, URL);
     private DbMenuCardMapper dbMenuCardMapper = new DbMenuCardMapper(database);
+    private DbOrderMapper dbOrderMapper = new DbOrderMapper(database);
 
     public void mainMenuLoop() {
 
@@ -27,11 +30,29 @@ public class MainMenu {
                 case 3: deletePizza(); break;
                 case 4: insertPizza(); break;
                 case 5: updatePizza(); break;
-                case 6: running = false; break;
+                case 6: newOrder(); break;
+                case 7: running = false; break;
             }
         }
         System.out.println("Tak for denne gang!");
     }
+
+    private boolean  newOrder() {
+    int pizzaNo = Input.getInt("hvilken pizza skal du ha? ");
+    int amount = Input.getInt("hvor mange skal du have? ");
+    int pickUpTime = Input.getTimeInMinutes("Afhentningstidpunkt - hh:mm"); // hh:mm
+     String name = Input.getString("Navn: ");
+     String phone = Input.getString("Telefonnummer");
+     Orders orders = new Orders(pizzaNo, amount, pickUpTime, name, phone);
+
+     boolean result = dbOrderMapper.newOrder(orders);
+     if (result) {
+         System.out.println("Bestillingen gik godt");}
+         else {
+             System.out.println("Der gik noget galt med bestillingen");}
+     return result;
+    }
+
 
     private void showMenu() {
         System.out.println("**** Marios pizzabar - hovedmenu ******");
