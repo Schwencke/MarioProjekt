@@ -1,7 +1,10 @@
 package persistence;
 import domain.Orders;
+import domain.Orders;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DbOrderMapper {
 
@@ -36,6 +39,35 @@ public class DbOrderMapper {
         }       return result;
 
 
+    }
+    public List<Orders> readOrders() {
+
+        List<Orders> orders = new ArrayList<>();
+
+        String sql = "select * from orders Order by pickup_time ASC";
+
+        try (Connection connection = database.connect()) {
+            try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    int orderId = rs.getInt("order_id");
+                    int pizzaNo = rs.getInt("pizza_no");
+                    int amount = rs.getInt("amount");
+                    int pickUpTime = rs.getInt("pickup_time");
+                    Timestamp orderTime = rs.getTimestamp("order_time");
+                    String phoneNo = rs.getString("phone");
+                    String customerName = rs.getString("customer_name");
+                    boolean removed = rs.getBoolean("removed");
+                    orders.add(new Orders(orderId, pizzaNo,amount,pickUpTime,orderTime,customerName,phoneNo,removed));
+                }
+            } catch (SQLException throwables) {
+                // TODO: Make own throwable exception and let it bubble upwards
+                throwables.printStackTrace();
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return orders;
     }
 
 }

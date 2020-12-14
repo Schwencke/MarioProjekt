@@ -24,25 +24,42 @@ public class MainMenu {
 
         while (running) {
             showMenu();
-            switch(Input.getInt("Vælg 1-6: ")){
+            switch(Input.getInt("Vælg 1-8: ")){
                 case 1: showMenuCard(); break;
                 case 2: showSinglePizza(); break;
                 case 3: deletePizza(); break;
                 case 4: insertPizza(); break;
                 case 5: updatePizza(); break;
                 case 6: newOrder(); break;
-                case 7: running = false; break;
+                case 7: readOrder(); break;
+                case 8: running = false; break;
             }
         }
         System.out.println("Tak for denne gang!");
     }
 
-    private boolean  newOrder() {
-    int pizzaNo = Input.getInt("hvilken pizza skal du ha? ");
-    int amount = Input.getInt("hvor mange skal du have? ");
-    int pickUpTime = Input.getTimeInMinutes("Afhentningstidpunkt - hh:mm"); // hh:mm
+    private void readOrder() {
+        List<Orders> ordersList = dbOrderMapper.readOrders();
+        for (Orders orders : ordersList) {
+            System.out.println("---");
+            System.out.println("ORDER ID :" + orders.getOrderID());
+            System.out.println("PIZZA NR :" + orders.getPizzaNo());
+            System.out.println("ANTAL :" + orders.getAmount());
+            System.out.println("KUNDE NAVN :" + orders.getCustomerName());
+            System.out.println("AFHENTNINGS TIDSPUNKT :" + Input.getMinutesToTimeFormat(orders.getPickupTime()));
+            System.out.println("ORDRE TIDSPUNKT :" + orders.getOrderTime());
+            System.out.println("TELEFON :" + orders.getPhoneNo());
+            System.out.println("---");
+
+        }
+    }
+
+    private boolean newOrder() {
+    int pizzaNo = Input.getInt("hvilken pizza skal du ha?: ");
+    int amount = Input.getInt("hvor mange ønsker du?: ");
+    int pickUpTime = Input.getTimeInMinutes("Afhentningstidpunkt - hh.mm"); // hh.mm
      String name = Input.getString("Navn: ");
-     String phone = Input.getString("Telefonnummer");
+     String phone = Input.getString("Telefonnummer: ");
      Orders orders = new Orders(pizzaNo, amount, pickUpTime, name, phone);
 
      boolean result = dbOrderMapper.newOrder(orders);
@@ -54,9 +71,10 @@ public class MainMenu {
     }
 
 
+
     private void showMenu() {
         System.out.println("**** Marios pizzabar - hovedmenu ******");
-        System.out.println("[1] Vis menukort [2] Vis enkelt pizza [3] Fjern pizza [4] Opret ny pizza [5] Opdater pizza [6] Afslut");
+        System.out.println("[1]Vis menukort [2]Vis enkelt pizza [3]Fjern pizza [4]Opret ny pizza [5]Opdater Pizza [6]Opret Ordre [7]Vis Ordre [8]Afslut");
     }
 
     private void updatePizza() {
