@@ -24,7 +24,7 @@ public class MainMenu {
 
         while (running) {
             showMenu();
-            switch(Input.getInt("Vælg 1-8: ")){
+            switch(Input.getInt("Vælg 1-9: ")){
                 case 1: showMenuCard(); break;
                 case 2: showSinglePizza(); break;
                 case 3: deletePizza(); break;
@@ -32,7 +32,8 @@ public class MainMenu {
                 case 5: updatePizza(); break;
                 case 6: newOrder(); break;
                 case 7: readOrder(); break;
-                case 8: running = false; break;
+                case 8: updateOrder(); break;
+                case 9: running = false; break;
             }
         }
         System.out.println("Tak for denne gang!");
@@ -74,7 +75,7 @@ public class MainMenu {
 
     private void showMenu() {
         System.out.println("**** Marios pizzabar - hovedmenu ******");
-        System.out.println("[1]Vis menukort [2]Vis enkelt pizza [3]Fjern pizza [4]Opret ny pizza [5]Opdater Pizza [6]Opret Ordre [7]Vis Ordre [8]Afslut");
+        System.out.println("[1]Vis menukort [2]Vis enkelt pizza [3]Fjern pizza [4]Opret ny pizza [5]Opdater Pizza [6]Opret Ordre [7]Vis Ordre [8]Opdater ordre [9]Afslut");
     }
 
     private void updatePizza() {
@@ -143,6 +144,41 @@ public class MainMenu {
             System.out.println(pizza.toString());
         } else {
             System.out.println("Pizza med nr = " + pizzaNo + " findes desværre ikke");
+        }
+    }
+    private void updateOrder() {
+        System.out.println("***** Opdater Ordre *******");
+        int ordreId = Input.getInt("Hvilket ordre id vil du rette: ");
+        System.out.println("Indtast ny værdi, hvis den skal rettes - eller blot <retur>: ");
+
+        Orders orders = dbOrderMapper.getOrderById(ordreId);
+        // SÅ HAR VI VORES ORDRE OBJEKT FYLDT MED INFO
+        String newPizzaNoInput = Input.getString("Pizzanummer: (" + orders.getPizzaNo() + "): " );
+        if (newPizzaNoInput.length() > 0){
+            orders.setPizzaNo(Integer.parseInt(newPizzaNoInput));
+        }
+        String newOrdreAmount = Input.getString("Nuværende antal: (" + orders.getAmount() + "): ");
+        if (newOrdreAmount.length() > 0){
+            orders.setAmount(Integer.parseInt(newOrdreAmount));
+        }
+        int newPickupTime = Input.getTimeInMinutes("Nuværende afhentnings tidspunkt: (" + Input.getMinutesToTimeFormat(orders.getPickupTime()) + "): ");
+        if (newPickupTime > 0){
+            orders.setPickupTime(newPickupTime);
+        }
+        String newCustomerName = Input.getString("Nuværende navn på kunde: (" + orders.getCustomerName() + "): ");
+        if (newCustomerName.length() > 0){
+            orders.setCustomerName(newCustomerName);
+        }
+        String newPhone = Input.getString("Nuværende tlf nr: " + orders.getPhoneNo() + "): ");
+        if (newPhone.length() > 0){
+            orders.setPhoneNo(newPhone);
+        }
+        boolean result = dbOrderMapper.updateOrders(orders);
+
+        if (result){
+            System.out.println("Ordre med nr = " + ordreId + " er nu opdateret");
+        } else {
+            System.out.println("Vi kunne desværre ikke opdatere ordren.");
         }
     }
 

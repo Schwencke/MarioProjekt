@@ -21,6 +21,16 @@ public class Orders {
         this.phoneNo = phoneNo;
     }
 
+    public Orders(int orderId, int pizzaNo, int amount, int pickupTime,String customerName, String phone) {
+        this.orderID = orderId;
+        this.amount = amount;
+        this.pizzaNo = pizzaNo;
+        this.pickupTime = pickupTime;
+        this.customerName = customerName;
+        this.phoneNo = phone;
+
+    }
+
     public int getOrderID() {
         return orderID;
     }

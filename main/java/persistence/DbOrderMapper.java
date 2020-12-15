@@ -1,6 +1,7 @@
 package persistence;
 import domain.Orders;
 import domain.Orders;
+import domain.Pizza;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -70,4 +71,57 @@ public class DbOrderMapper {
         return orders;
     }
 
+    public Orders getOrderById(int ordreId) {
+        Orders orders = null;
+        String sql = "select * from orders where order_id = ?";
+        try (Connection connection = database.connect()) {
+            try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                ps.setInt(1, ordreId);
+                ResultSet rs = ps.executeQuery();
+                if (rs.next()) {
+                    int orderId = rs.getInt("order_id");
+                    int pizzaNo = rs.getInt("pizza_no");
+                    int amount = rs.getInt("amount");
+                    String customerName = rs.getString("customer_name");
+                    int pickupTime = rs.getInt("pickup_time");
+                    String phone = rs.getString("phone");
+                    orders = new Orders(orderId, pizzaNo, amount,pickupTime, customerName, phone);
+                }
+            } catch (SQLException throwables) {
+                // TODO: Make own throwable exception and let it bubble upwards
+                throwables.printStackTrace();
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return orders;
+    }
+
+    public boolean updateOrders(Orders orders) {
+        boolean result = false;
+        String sql = "update orders set pizza_no = ?, amount = ?, pickup_time = ?, customer_name = ?, phone = ? where order_id = ?";
+      try {
+          try (Connection connection = database.connect()) {
+              try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                  ps.setInt(1, orders.getPizzaNo());
+                  ps.setInt(2, orders.getAmount());
+                  ps.setInt(3, orders.getPickupTime());
+                  ps.setString(4, orders.getCustomerName());
+                  ps.setString(5, orders.getPhoneNo());
+                  ps.setInt(6, orders.getOrderID());
+                  int rowsAffected = ps.executeUpdate();
+                  if (rowsAffected >= 1) {
+                      result = true;
+                  }
+              } catch (SQLException throwables) {
+                  // TODO: Make own throwable exception and let it bubble upwards
+                  throwables.printStackTrace();
+              }}
+          } catch (SQLException throwables) {
+              // TODO: Make own throwable exception and let it bubble upwards
+              throwables.printStackTrace();
+          }
+          return result;
+
+    }
 }

@@ -130,7 +130,7 @@ public class DbMenuCardMapper {
                 ps.setInt(4, pizza.getPrice());
                 ps.setInt(5, pizza.getPizzaNo());
                 int rowsAffected = ps.executeUpdate();
-                if (rowsAffected == 1){
+                if (rowsAffected >= 1){
                     result = true;
                 }
             } catch (SQLException throwables) {
