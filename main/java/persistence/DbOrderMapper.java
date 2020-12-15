@@ -50,7 +50,7 @@ public class DbOrderMapper {
         String sql = "select * from orders Order by pickup_time ASC";
 
         try (Connection connection = database.connect()) {
-            try (PreparedStatement ps = connection.preparedStatement(sql)) {
+            try (PreparedStatement ps = connection.prepareStatement(sql)) {
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
                     if (rs.getBoolean("removed") ==false){
