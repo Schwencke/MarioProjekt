@@ -2,10 +2,12 @@ package ui;
 
 import domain.Orders;
 import domain.Pizza;
+import domain.Statistics;
 import persistence.Database;
 import persistence.DbMenuCardMapper;
 import persistence.DbOrderMapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainMenu {
@@ -32,11 +34,42 @@ public class MainMenu {
                 case 5: updatePizza(); break;
                 case 6: newOrder(); break;
                 case 7: readOrder(); break;
-                case 8: updateOrder(); break;
-                case 9: running = false; break;
+                case 8: removeOrder(); break;
+                case 9: updateOrder(); break;
+                case 10: statistics(); break;
+                case 11: running = false; break;
             }
         }
         System.out.println("Tak for denne gang!");
+    }
+
+    private void removeOrder() {
+        readOrder();
+        int orderIdtoRemove = Input.getInt("Hvilken order vil du fjerne?");
+        dbOrderMapper.removeOrder(orderIdtoRemove);
+
+    }
+
+    private void statistics() {
+
+    int amountSold = 0;
+    int uiPizzaNo = 0;
+
+    List<Statistics> pizzaAmountSold = new ArrayList<>(dbOrderMapper.statisticsArchived());
+
+      uiPizzaNo = Input.getInt("Hvilken pizza vil du se statistik for? ");
+
+        for (Statistics statistics : pizzaAmountSold) {
+            if (statistics.getPizzaNo() == uiPizzaNo) amountSold += statistics.getAmount();
+
+        }
+        if (amountSold <=0 ) System.out.println(" MAKKER der er ikke solgt nogen af pizzanr :" + uiPizzaNo);
+            else {
+            System.out.println("Der er solgt: " + amountSold + "stk");
+            System.out.println("af pizzavariant: " + dbMenuCardMapper.getPizzaById(uiPizzaNo).getName());
+        }
+
+
     }
 
     private void readOrder() {
@@ -75,7 +108,7 @@ public class MainMenu {
 
     private void showMenu() {
         System.out.println("**** Marios pizzabar - hovedmenu ******");
-        System.out.println("[1]Vis menukort [2]Vis enkelt pizza [3]Fjern pizza [4]Opret ny pizza [5]Opdater Pizza [6]Opret Ordre [7]Vis Ordre [8]Opdater ordre [9]Afslut");
+        System.out.println("[1]Vis menukort [2]Vis enkelt pizza [3]Fjern pizza [4]Opret ny pizza [5]Opdater Pizza [6]Opret Ordre [7]Vis Ordre [8]Fjern ordre [9]Opdater Ordre [10]Statistics [11] afslut");
     }
 
     private void updatePizza() {
