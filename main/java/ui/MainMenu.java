@@ -3,6 +3,7 @@ package ui;
 import domain.Orders;
 import domain.Pizza;
 import domain.Statistics;
+import org.w3c.dom.ls.LSOutput;
 import persistence.Database;
 import persistence.DbMenuCardMapper;
 import persistence.DbOrderMapper;
@@ -32,7 +33,7 @@ public class MainMenu {
                 case 3: pizzaEdit(); break;
                 case 4: newOrder(); break;
                 case 5: orderEdit();break;
-                case 6: statistics(); break;
+                case 6: statisticsTotal(); break;
                 case 7: running = false; break;
             }
         }
@@ -68,22 +69,22 @@ public class MainMenu {
     }
 
     private void statisticsTotal() {
-
-        int amountSold = 0;
-        int uiPizzaNo = 1;
-        boolean running = true;
+        int amountSold;
+        int uiPizzaNo;
         List<Statistics> pizzaAmountSold = new ArrayList<>(dbOrderMapper.statisticsArchived());
-    if(uiPizzaNo <=5) {while(running) {
         for (Statistics statistics : pizzaAmountSold) {
+                uiPizzaNo = statistics.getPizzaNo();
+                amountSold = statistics.getAmount();
+                System.out.println("\nDer er solgt: " + amountSold + "stk");
+                System.out.println("af pizzavariant: " + dbMenuCardMapper.getPizzaById(uiPizzaNo).getName());
+                System.out.println("total omsætning på " + amountSold * dbMenuCardMapper.getPizzaById(uiPizzaNo).getPrice() + " kr");
 
-            if (statistics.getPizzaNo() == uiPizzaNo) {
-                amountSold += statistics.getAmount();
+            }
 
-        }}
-        System.out.println("\nDer er solgt: " + amountSold + "stk");
-        System.out.println("af pizzavariant: " + dbMenuCardMapper.getPizzaById(uiPizzaNo).getName());
-        System.out.println("total omsætning på " + amountSold * dbMenuCardMapper.getPizzaById(uiPizzaNo).getPrice() + " kr \n");
-    uiPizzaNo ++; amountSold = 0; if (uiPizzaNo <=5) running = false;}}}
+
+
+    }
+
 
 
 
@@ -159,7 +160,7 @@ public class MainMenu {
 
     }
     private void showMenu() {
-        System.out.println("**** Marios pizzabar - hovedmenu ******");
+        System.out.println("\n**** Marios pizzabar - hovedmenu ******");
         System.out.println("[1]Vis menukort");
         System.out.println("[2]Vis enkelt pizza");
         System.out.println("[3]Pizza Redigering");
