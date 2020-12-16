@@ -26,18 +26,14 @@ public class MainMenu {
 
         while (running) {
             showMenu();
-            switch(Input.getInt("Vælg 1-9: ")){
+            switch(Input.getInt("Vælg 1-7: ")){
                 case 1: showMenuCard(); break;
                 case 2: showSinglePizza(); break;
-                case 3: deletePizza(); break;
-                case 4: insertPizza(); break;
-                case 5: updatePizza(); break;
-                case 6: newOrder(); break;
-                case 7: readOrder(); break;
-                case 8: removeOrder(); break;
-                case 9: updateOrder(); break;
-                case 10: statistics(); break;
-                case 11: running = false; break;
+                case 3: pizzaEdit(); break;
+                case 4: newOrder(); break;
+                case 5: orderEdit();break;
+                case 6: statistics(); break;
+                case 7: running = false; break;
             }
         }
         System.out.println("Tak for denne gang!");
@@ -65,12 +61,32 @@ public class MainMenu {
         }
         if (amountSold <=0 ) System.out.println(" MAKKER der er ikke solgt nogen af pizzanr :" + uiPizzaNo);
             else {
-            System.out.println("Der er solgt: " + amountSold + "stk");
+            System.out.println("\nDer er solgt: " + amountSold + "stk");
             System.out.println("af pizzavariant: " + dbMenuCardMapper.getPizzaById(uiPizzaNo).getName());
+            System.out.println("total omsætning på " + amountSold * dbMenuCardMapper.getPizzaById(uiPizzaNo).getPrice() + " kr \n");
         }
-
-
     }
+
+    private void statisticsTotal() {
+
+        int amountSold = 0;
+        int uiPizzaNo = 1;
+        boolean running = true;
+        List<Statistics> pizzaAmountSold = new ArrayList<>(dbOrderMapper.statisticsArchived());
+    if(uiPizzaNo <=5) {while(running) {
+        for (Statistics statistics : pizzaAmountSold) {
+
+            if (statistics.getPizzaNo() == uiPizzaNo) {
+                amountSold += statistics.getAmount();
+
+        }}
+        System.out.println("\nDer er solgt: " + amountSold + "stk");
+        System.out.println("af pizzavariant: " + dbMenuCardMapper.getPizzaById(uiPizzaNo).getName());
+        System.out.println("total omsætning på " + amountSold * dbMenuCardMapper.getPizzaById(uiPizzaNo).getPrice() + " kr \n");
+    uiPizzaNo ++; amountSold = 0; if (uiPizzaNo <=5) running = false;}}}
+
+
+
 
     private void readOrder() {
         List<Orders> ordersList = dbOrderMapper.readOrders();
@@ -104,11 +120,53 @@ public class MainMenu {
      return result;
     }
 
+    private void pizzaEdit (){
 
+        System.out.println("**** Marios pizzabar - Pizzamenu ******");
+        System.out.println("[1] fjern pizza");
+        System.out.println("[2] opret ny pizza");
+        System.out.println("[3] opdater pizza");
+        System.out.println("[4] tilbage til hovedmenu");
+        switch (Input.getInt("vælg 1-4")){
+            case 1 : deletePizza();break;
+            case 2 : insertPizza();break;
+            case 3 : updatePizza();break;
+            case 4 : mainMenuLoop();break;
 
+        }
+
+    }
+    private void orderEdit(){
+
+        System.out.println("**** Marios pizzabar - Ordremenu ******");
+        System.out.println("[1]  se igangværende ordre");
+        System.out.println("[2] fjern ordre");
+        System.out.println("[3] opdater ordre");
+        System.out.println("[4] tilbage til hovedmenu");
+        switch (Input.getInt("vælg 1-4")) {
+            case 1:
+                readOrder();
+                break;
+            case 2:
+                removeOrder();
+                break;
+            case 3:
+                updateOrder(); break;
+            case 4:
+                mainMenuLoop();
+                break;
+        }
+
+    }
     private void showMenu() {
         System.out.println("**** Marios pizzabar - hovedmenu ******");
-        System.out.println("[1]Vis menukort [2]Vis enkelt pizza [3]Fjern pizza [4]Opret ny pizza [5]Opdater Pizza [6]Opret Ordre [7]Vis Ordre [8]Fjern ordre [9]Opdater Ordre [10]Statistics [11] afslut");
+        System.out.println("[1]Vis menukort");
+        System.out.println("[2]Vis enkelt pizza");
+        System.out.println("[3]Pizza Redigering");
+        System.out.println("[4]Opret Ordre");
+        System.out.println("[5]Ordrehåndtering");
+        System.out.println("[6]Statistik");
+        System.out.println("[7]Afslut");
     }
 
     private void updatePizza() {
@@ -179,6 +237,7 @@ public class MainMenu {
             System.out.println("Pizza med nr = " + pizzaNo + " findes desværre ikke");
         }
     }
+
     private void updateOrder() {
         System.out.println("***** Opdater Ordre *******");
         int ordreId = Input.getInt("Hvilket ordre id vil du rette: ");
@@ -217,9 +276,26 @@ public class MainMenu {
 
     private void showMenuCard() {
         System.out.println("**** Menukort hos Marios ******");
+//        List<Pizza> menuCard = dbMenuCardMapper.getAllPizzas();
+//        for (Pizza pizza : menuCard) {
+//            System.out.println(pizza.toString());
+//        }
         List<Pizza> menuCard = dbMenuCardMapper.getAllPizzas();
         for (Pizza pizza : menuCard) {
-            System.out.println(pizza.toString());
+            int pizzaNo = pizza.getPizzaNo();
+            String name = pizza.getName();
+            String ingredients = pizza.getIngredients();
+            double price = pizza.getPrice();
+            String text,dotLine;
+            int dotLenght = 100;
+            //  System.out.println("");
+            dotLine = ".";
+            text = pizzaNo + ". " + name + ": " + ingredients;
+            for (int i = 0; i < dotLenght - text.length(); i++) {
+                dotLine = dotLine + ".";
+            }
+            text = text + " " + dotLine + " " + price + " kr.";
+            System.out.println(text);
         }
     }
 
