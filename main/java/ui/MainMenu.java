@@ -27,20 +27,53 @@ public class MainMenu {
 
         while (running) {
             showMenu();
-            switch(Input.getInt("Vælg 1-7: ")){
-                case 1: showMenuCard(); break;
-                case 2: showSinglePizza(); break;
-                case 3: pizzaEdit(); break;
-                case 4: newOrder(); break;
-                case 5: orderEdit();break;
-                case 6: statisticsTotal(); break;
-                case 7: running = false; break;
+            switch(Input.getInt("Vælg 1-6: ")){
+                case 1: newOrder(); break;
+                case 2: showMenuCard(); break;
+                case 3: showSinglePizza(); break;
+                case 4: admin(); break;
+                case 5: running = false; break;
             }
         }
         System.out.println("Tak for denne gang!");
     }
+    private void showMenu() {
+        System.out.println("\n**** Marios pizzabar - HOVDEMENU ******");
+        System.out.println("[1]Opret Ordre");
+        System.out.println("[2]Vis menukort");
+        System.out.println("[3]Vis en enkelt pizza");
+        System.out.println("[4]Admin");
+        System.out.println("[5]Afslut");
+    }
+
+    private void admin() {
+        System.out.println("\n**** Marios pizzabar - ADMIN ******");
+        System.out.println("[1]Pizza redigering");
+        System.out.println("[2]Ordre håndtering");
+        System.out.println("[3]Statistik");
+        System.out.println("[4]Tilbage til hovedmenuen");
+        switch (Input.getInt("Vælg 1-4: ")){
+            case 1:pizzaEdit(); break;
+            case 2:orderEdit(); break;
+            case 3:Statistik(); break;
+            case 4:mainMenuLoop(); break;
+        }
+    }
+
+    private void Statistik() {
+        System.out.println("\n**** Marios pizzabar - STATISTIK ******");
+        System.out.println("[1]Statistik på enkelt pizzanr");
+        System.out.println("[2]Statistik på alle pizzaer");
+        System.out.println("[3]Tilbage til hovdemenuen");
+        switch (Input.getInt("Vælg 1-3")){
+            case 1:statistics(); break;
+            case 2:statisticsTotal(); break;
+            case 3: mainMenuLoop(); break;
+        }
+    }
 
     private void removeOrder() {
+        System.out.println("\n**** Marios pizzabar - REMOVE ORDER ******");
         readOrder();
         int orderIdtoRemove = Input.getInt("Hvilken order vil du fjerne?");
         dbOrderMapper.removeOrder(orderIdtoRemove);
@@ -48,7 +81,7 @@ public class MainMenu {
     }
 
     private void statistics() {
-
+        System.out.println("\n**** Marios pizzabar - STATISTIK ******");
     int amountSold = 0;
     int uiPizzaNo = 0;
 
@@ -123,7 +156,7 @@ public class MainMenu {
 
     private void pizzaEdit (){
 
-        System.out.println("**** Marios pizzabar - Pizzamenu ******");
+        System.out.println("**** Marios pizzabar - PIZZA-REDIGERING ******");
         System.out.println("[1] fjern pizza");
         System.out.println("[2] opret ny pizza");
         System.out.println("[3] opdater pizza");
@@ -139,7 +172,7 @@ public class MainMenu {
     }
     private void orderEdit(){
 
-        System.out.println("**** Marios pizzabar - Ordremenu ******");
+        System.out.println("**** Marios pizzabar - ORDREHÅNDTERING ******");
         System.out.println("[1]  se igangværende ordre");
         System.out.println("[2] fjern ordre");
         System.out.println("[3] opdater ordre");
@@ -159,16 +192,7 @@ public class MainMenu {
         }
 
     }
-    private void showMenu() {
-        System.out.println("\n**** Marios pizzabar - hovedmenu ******");
-        System.out.println("[1]Vis menukort");
-        System.out.println("[2]Vis enkelt pizza");
-        System.out.println("[3]Pizza Redigering");
-        System.out.println("[4]Opret Ordre");
-        System.out.println("[5]Ordrehåndtering");
-        System.out.println("[6]Statistik");
-        System.out.println("[7]Afslut");
-    }
+
 
     private void updatePizza() {
         System.out.println("***** Opdater pizza *******");
