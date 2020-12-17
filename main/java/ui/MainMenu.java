@@ -27,7 +27,7 @@ public class MainMenu {
 
         while (running) {
             showMenu();
-            switch(Input.getInt("Vælg 1-6: ")){
+            switch(Input.getInt("Vælg 1-5: ")){
                 case 1: newOrder(); break;
                 case 2: showMenuCard(); break;
                 case 3: showSinglePizza(); break;
@@ -106,6 +106,7 @@ public class MainMenu {
         int uiPizzaNo;
         List<Statistics> pizzaAmountSold = new ArrayList<>(dbOrderMapper.statisticsArchived());
         for (Statistics statistics : pizzaAmountSold) {
+
                 uiPizzaNo = statistics.getPizzaNo();
                 amountSold = statistics.getAmount();
                 System.out.println("\nDer er solgt: " + amountSold + "stk");
@@ -113,10 +114,8 @@ public class MainMenu {
                 System.out.println("total omsætning på " + amountSold * dbMenuCardMapper.getPizzaById(uiPizzaNo).getPrice() + " kr");
 
             }
-
-
-
     }
+
 
 
 
