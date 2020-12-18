@@ -52,12 +52,14 @@ public class MainMenu {
         System.out.println("[2]Ordre håndtering");
         System.out.println("[3]Statistik");
         System.out.println("[4]Tilbage til hovedmenuen");
+       boolean running = true;
+       if (running) {
         switch (Input.getInt("Vælg 1-4: ")){
             case 1:pizzaEdit(); break;
             case 2:orderEdit(); break;
             case 3:Statistik(); break;
-            case 4:mainMenuLoop(); break;
-        }
+            default: break;
+        }}
     }
 
     private void Statistik() {
@@ -68,7 +70,7 @@ public class MainMenu {
         switch (Input.getInt("Vælg 1-3")){
             case 1:statistics(); break;
             case 2:statisticsTotal(); break;
-            case 3: mainMenuLoop(); break;
+            default: break;
         }
     }
 
@@ -164,7 +166,7 @@ public class MainMenu {
             case 1 : deletePizza();break;
             case 2 : insertPizza();break;
             case 3 : updatePizza();break;
-            case 4 : mainMenuLoop();break;
+            default: break;
 
         }
 
@@ -185,9 +187,7 @@ public class MainMenu {
                 break;
             case 3:
                 updateOrder(); break;
-            case 4:
-                mainMenuLoop();
-                break;
+            default: break;
         }
 
     }
