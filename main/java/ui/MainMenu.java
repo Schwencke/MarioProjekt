@@ -4,11 +4,10 @@ import domain.CustomExceptions;
 import domain.Orders;
 import domain.Pizza;
 import domain.Statistics;
-import org.w3c.dom.ls.LSOutput;
 import persistence.Database;
 import persistence.DbMenuCardMapper;
 import persistence.DbOrderMapper;
-import persistence.LogWriter;
+import domain.LogWriter;
 
 import java.io.*;
 import java.util.ArrayList;
