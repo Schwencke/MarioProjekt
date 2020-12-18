@@ -33,12 +33,12 @@ public class DbMenuCardMapper {
                     pizzaList.add(new Pizza(pizza_id, pizza_no, name, ingredients, price));
                 }
             } catch (SQLException e) {
-                throw new CustomExceptions("SQL FEJL");
+                throw new CustomExceptions("Der er sket en fejl med indlæsning af pizza");
 
             }
         } catch (SQLException throwables) {
             throw new CustomExceptions("SQL FEJL");
-        }} else System.out.println("Der var en fejl i databaseforbindelsen");
+        }} else System.out.println("Der var ingen pizzaer");
         return pizzaList;
     }
 
@@ -58,7 +58,7 @@ public class DbMenuCardMapper {
                     pizza = new Pizza(pizza_id, pizza_no, name, ingredients, price);
                 }
             } catch (SQLException e) {
-                throw new CustomExceptions("SQL FEJL");
+                throw new CustomExceptions("Der er sket en fejl ved indlæsning af pizza fra ID");
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -68,7 +68,7 @@ public class DbMenuCardMapper {
 
     public boolean deletePizza(int pizzaNo) throws CustomExceptions {
         boolean result = false;
-        String sql = "delete from pizza where pizza_no = ?";
+        String sql = "delete from piza where pizza_no = ?";
         try (Connection connection = database.connect()) {
             try (PreparedStatement ps = connection.prepareStatement(sql)) {
                 ps.setInt(1, pizzaNo);
@@ -77,10 +77,9 @@ public class DbMenuCardMapper {
                     result = true;
                 }
             } catch (SQLException e) {
-                throw new CustomExceptions("SQL FEJL");
+                throw new CustomExceptions("Der er sket fejl i databasen ved sletning af pizza");
             }
         } catch (SQLException throwables) {
-            // TODO: Make own throwable exception and let it bubble upwards
             throwables.printStackTrace();
         }
         return result;
@@ -108,10 +107,9 @@ public class DbMenuCardMapper {
                     pizza = null;
                 }
             } catch (SQLException e) {
-                throw new CustomExceptions("SQL FEJL");
+                throw new CustomExceptions("Der er sket fejl i databasen ved indsætning af pizza");
             }
         } catch (SQLException throwables) {
-            // TODO: Make own throwable exception and let it bubble upwards
             throwables.printStackTrace();
         }
         return pizza;

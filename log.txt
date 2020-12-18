@@ -14,3 +14,70 @@ domain.CustomExceptions: Fejl under etablering af forbindelse til database
 	at ui.MainMenu.mainMenuLoop(MainMenu.java:51)
 	at Main.main(Main.java:9)
 
+Fri Dec 18 12:38:30 CET 2020
+domain.CustomExceptions: Fejl under etablering af forbindelse til database
+	at persistence.Database.connect(Database.java:32)
+	at persistence.DbMenuCardMapper.getAllPizzas(DbMenuCardMapper.java:24)
+	at ui.MainMenu.showMenuCard(MainMenu.java:324)
+	at ui.MainMenu.mainMenuLoop(MainMenu.java:51)
+	at Main.main(Main.java:9)
+
+Fri Dec 18 12:41:13 CET 2020
+domain.CustomExceptions: Der er sket en fejl
+	at persistence.DbMenuCardMapper.getAllPizzas(DbMenuCardMapper.java:36)
+	at ui.MainMenu.showMenuCard(MainMenu.java:324)
+	at ui.MainMenu.mainMenuLoop(MainMenu.java:51)
+	at Main.main(Main.java:9)
+
+Fri Dec 18 12:42:59 CET 2020
+domain.CustomExceptions: Der er sket en fejl med indlæsning af pizza
+	at persistence.DbMenuCardMapper.getAllPizzas(DbMenuCardMapper.java:36)
+	at ui.MainMenu.showMenuCard(MainMenu.java:324)
+	at ui.MainMenu.mainMenuLoop(MainMenu.java:51)
+	at Main.main(Main.java:9)
+
+Fri Dec 18 13:12:53 CET 2020
+domain.CustomExceptions: Der er sket fejl i databasen ved sletning af pizza
+	at persistence.DbMenuCardMapper.deletePizza(DbMenuCardMapper.java:80)
+	at ui.MainMenu.deletePizza(MainMenu.java:262)
+	at ui.MainMenu.pizzaEdit(MainMenu.java:183)
+	at ui.MainMenu.admin(MainMenu.java:80)
+	at ui.MainMenu.mainMenuLoop(MainMenu.java:53)
+	at Main.main(Main.java:9)
+
+Fri Dec 18 13:16:09 CET 2020
+domain.CustomExceptions: Der er sket fejl i databasen ved indsætning af pizza
+	at persistence.DbMenuCardMapper.insertPizza(DbMenuCardMapper.java:110)
+	at ui.MainMenu.insertPizza(MainMenu.java:249)
+	at ui.MainMenu.pizzaEdit(MainMenu.java:184)
+	at ui.MainMenu.admin(MainMenu.java:80)
+	at ui.MainMenu.mainMenuLoop(MainMenu.java:53)
+	at Main.main(Main.java:9)
+
+Fri Dec 18 13:17:09 CET 2020
+domain.CustomExceptions: Der er sket fejl i databasen ved indsætning af pizza
+	at persistence.DbMenuCardMapper.insertPizza(DbMenuCardMapper.java:110)
+	at ui.MainMenu.insertPizza(MainMenu.java:249)
+	at ui.MainMenu.pizzaEdit(MainMenu.java:184)
+	at ui.MainMenu.admin(MainMenu.java:80)
+	at ui.MainMenu.mainMenuLoop(MainMenu.java:53)
+	at Main.main(Main.java:9)
+
+Fri Dec 18 13:20:04 CET 2020
+domain.CustomExceptions: Der er sket fejl i databasen ved sletning af pizza
+	at persistence.DbMenuCardMapper.deletePizza(DbMenuCardMapper.java:80)
+	at ui.MainMenu.deletePizza(MainMenu.java:264)
+	at ui.MainMenu.pizzaEdit(MainMenu.java:183)
+	at ui.MainMenu.admin(MainMenu.java:80)
+	at ui.MainMenu.mainMenuLoop(MainMenu.java:53)
+	at Main.main(Main.java:9)
+
+Fri Dec 18 13:20:59 CET 2020
+domain.CustomExceptions: Der er sket fejl i databasen ved sletning af pizza
+	at persistence.DbMenuCardMapper.deletePizza(DbMenuCardMapper.java:80)
+	at ui.MainMenu.deletePizza(MainMenu.java:264)
+	at ui.MainMenu.pizzaEdit(MainMenu.java:183)
+	at ui.MainMenu.admin(MainMenu.java:80)
+	at ui.MainMenu.mainMenuLoop(MainMenu.java:53)
+	at Main.main(Main.java:9)
+

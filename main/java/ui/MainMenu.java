@@ -16,7 +16,7 @@ import java.util.List;
 
 public class MainMenu {
 
-    private final String USER = "testdb_user4";
+    private final String USER = "testdb_user";
     private final String PASSWORD = "1234";
     private final String URL = "jdbc:mysql://localhost:3306/mario?serverTimezone=CET&useSSL=false";
 
@@ -240,7 +240,7 @@ public class MainMenu {
     }
 
     private void insertPizza() throws CustomExceptions {
-        System.out.println("**** Opret ny pizza *******");
+      try{  System.out.println("**** Opret ny pizza *******");
         int pizzaNo = Input.getInt("Indtast pizza nummer: ");
         String name = Input.getString("Indtast navn på pizza: ");
         String ingredients = Input.getString("Indtast indhold: ");
@@ -252,40 +252,56 @@ public class MainMenu {
             System.out.println("Pizzaen har fået DB id = " + insertedPizza.getPizzaId());
         } else {
             System.out.println("Vi kunne desværre ikke oprette den nye pizza. PizzaNo findes allerede.");
-        }
-
-
-    }
+        }}catch (CustomExceptions e){
+          System.out.println(e.getMessage());
+          e.printStackTrace(new PrintWriter(errorsToString));
+          logWriter.addLogMessageToFile(errorsToString.toString());
+          this.running = false;
+    }}
 
     private void deletePizza() throws CustomExceptions {
-        int pizzaNo = Input.getInt("Indtast nummer på pizza som skal fjernes: ");
+      try{  int pizzaNo = Input.getInt("Indtast nummer på pizza som skal fjernes: ");
         boolean result = dbMenuCardMapper.deletePizza(pizzaNo);
         if (result){
             System.out.println("Pizzaen med nr = " + pizzaNo + " er nu fjernet");
         } else {
             System.out.println("Pizzaen med nr = " + pizzaNo + " findes ikke, og kan derfor ikke fjernes");
-        }
+        }}catch (CustomExceptions e){
+          System.out.println(e.getMessage());
+          e.printStackTrace(new PrintWriter(errorsToString));
+          logWriter.addLogMessageToFile(errorsToString.toString());
+          this.running = false;
+
+      }
 
     }
 
     private void showSinglePizza() throws CustomExceptions {
-        int pizzaNo = Input.getInt("Indtast pizzanummer: ");
-        Pizza pizza = dbMenuCardMapper.getPizzaById(pizzaNo);
-        if (pizza != null){
-            System.out.println("Du har fundet pizza nummer: " + pizzaNo);
-            System.out.println(pizza.toString());
-        } else {
-            System.out.println("Pizza med nr = " + pizzaNo + " findes desværre ikke");
+        try {
+            int pizzaNo = Input.getInt("Indtast pizzanummer: ");
+            Pizza pizza = dbMenuCardMapper.getPizzaById(pizzaNo);
+            if (pizza != null) {
+                System.out.println("Du har fundet pizza nummer: " + pizzaNo);
+                System.out.println(pizza.toString());
+            } else {
+                System.out.println("Pizza med nr = " + pizzaNo + " findes desværre ikke");
+            }
+        } catch (CustomExceptions e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace(new PrintWriter(errorsToString));
+            logWriter.addLogMessageToFile(errorsToString.toString());
+            this.running = false;
         }
     }
 
     private void updateOrder() throws CustomExceptions {
         System.out.println("***** Opdater Ordre *******");
         int ordreId = Input.getInt("Hvilket ordre id vil du rette: ");
-        System.out.println("Indtast ny værdi, hvis den skal rettes - eller blot <retur>: ");
 
         Orders orders = dbOrderMapper.getOrderById(ordreId);
-        // SÅ HAR VI VORES ORDRE OBJEKT FYLDT MED INFO
+        if (orders !=null){
+            System.out.println("Indtast ny værdi, hvis den skal rettes - eller blot <retur>: ");
+            // SÅ HAR VI VORES ORDRE OBJEKT FYLDT MED INFO
         String newPizzaNoInput = Input.getString("Pizzanummer: (" + orders.getPizzaNo() + "): " );
         if (newPizzaNoInput.length() > 0){
             orders.setPizzaNo(Integer.parseInt(newPizzaNoInput));
@@ -312,7 +328,7 @@ public class MainMenu {
             System.out.println("Ordre med nr = " + ordreId + " er nu opdateret");
         } else {
             System.out.println("Vi kunne desværre ikke opdatere ordren.");
-        }
+        }}else System.out.println("Det ordreID du forsøger at finde, eksistere ikke");
     }
 
     private void showMenuCard() throws CustomExceptions {
