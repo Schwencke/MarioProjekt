@@ -1,5 +1,6 @@
 package ui;
 
+import domain.CustomExceptions;
 import domain.Orders;
 import domain.Pizza;
 import domain.Statistics;
@@ -17,11 +18,21 @@ public class MainMenu {
     private final String PASSWORD = "1234";
     private final String URL = "jdbc:mysql://localhost:3306/mario?serverTimezone=CET&useSSL=false";
 
-    private Database database = new Database(USER, PASSWORD, URL);
-    private DbMenuCardMapper dbMenuCardMapper = new DbMenuCardMapper(database);
-    private DbOrderMapper dbOrderMapper = new DbOrderMapper(database);
+    private Database database;
+    private DbMenuCardMapper dbMenuCardMapper;
+    private DbOrderMapper dbOrderMapper;
 
-    public void mainMenuLoop() {
+    public MainMenu() {
+        try {
+            this.database = new Database(USER,PASSWORD,URL);
+        } catch (CustomExceptions e) {
+            e.getMessage();
+        }
+        this.dbOrderMapper = new DbOrderMapper(database);
+        this.dbMenuCardMapper = new DbMenuCardMapper(database);
+    }
+
+    public void mainMenuLoop() throws CustomExceptions {
 
         boolean running = true;
 
@@ -46,7 +57,7 @@ public class MainMenu {
         System.out.println("[5]Afslut");
     }
 
-    private void admin() {
+    private void admin() throws CustomExceptions {
         System.out.println("\n**** Marios pizzabar - ADMIN ******");
         System.out.println("[1]Pizza redigering");
         System.out.println("[2]Ordre håndtering");
@@ -62,7 +73,7 @@ public class MainMenu {
         }}
     }
 
-    private void Statistik() {
+    private void Statistik() throws CustomExceptions {
         System.out.println("\n**** Marios pizzabar - STATISTIK ******");
         System.out.println("[1]Statistik på enkelt pizzanr");
         System.out.println("[2]Statistik på alle pizzaer");
@@ -74,7 +85,7 @@ public class MainMenu {
         }
     }
 
-    private void removeOrder() {
+    private void removeOrder() throws CustomExceptions {
         System.out.println("\n**** Marios pizzabar - REMOVE ORDER ******");
         readOrder();
         int orderIdtoRemove = Input.getInt("Hvilken order vil du fjerne?");
@@ -82,7 +93,7 @@ public class MainMenu {
 
     }
 
-    private void statistics() {
+    private void statistics() throws CustomExceptions {
         System.out.println("\n**** Marios pizzabar - STATISTIK ******");
     int amountSold = 0;
     int uiPizzaNo = 0;
@@ -103,7 +114,7 @@ public class MainMenu {
         }
     }
 
-    private void statisticsTotal() {
+    private void statisticsTotal() throws CustomExceptions {
         int amountSold;
         int uiPizzaNo;
         List<Statistics> pizzaAmountSold = new ArrayList<>(dbOrderMapper.statisticsArchived());
@@ -123,7 +134,7 @@ public class MainMenu {
 
 
 
-    private void readOrder() {
+    private void readOrder() throws CustomExceptions {
         List<Orders> ordersList = dbOrderMapper.readOrders();
         for (Orders orders : ordersList) {
             System.out.println("---");
@@ -139,7 +150,7 @@ public class MainMenu {
         }
     }
 
-    private boolean newOrder() {
+    private boolean newOrder() throws CustomExceptions {
     int pizzaNo = Input.getInt("hvilken pizza skal du ha?: ");
     int amount = Input.getInt("hvor mange ønsker du?: ");
     int pickUpTime = Input.getTimeInMinutes("Afhentningstidpunkt - hh.mm"); // hh.mm
@@ -155,7 +166,7 @@ public class MainMenu {
      return result;
     }
 
-    private void pizzaEdit (){
+    private void pizzaEdit () throws CustomExceptions {
 
         System.out.println("**** Marios pizzabar - PIZZA-REDIGERING ******");
         System.out.println("[1] fjern pizza");
@@ -171,7 +182,7 @@ public class MainMenu {
         }
 
     }
-    private void orderEdit(){
+    private void orderEdit() throws CustomExceptions {
 
         System.out.println("**** Marios pizzabar - ORDREHÅNDTERING ******");
         System.out.println("[1]  se igangværende ordre");
@@ -193,7 +204,7 @@ public class MainMenu {
     }
 
 
-    private void updatePizza() {
+    private void updatePizza() throws CustomExceptions {
         System.out.println("***** Opdater pizza *******");
         int pizzaNo = Input.getInt("Indtast pizza nummer på den du vil rette: ");
         System.out.println("Indtast ny værdi, hvis den skal rettes - eller blot <retur>: ");
@@ -222,7 +233,7 @@ public class MainMenu {
         }
     }
 
-    private void insertPizza() {
+    private void insertPizza() throws CustomExceptions {
         System.out.println("**** Opret ny pizza *******");
         int pizzaNo = Input.getInt("Indtast pizza nummer: ");
         String name = Input.getString("Indtast navn på pizza: ");
@@ -240,7 +251,7 @@ public class MainMenu {
 
     }
 
-    private void deletePizza() {
+    private void deletePizza() throws CustomExceptions {
         int pizzaNo = Input.getInt("Indtast nummer på pizza som skal fjernes: ");
         boolean result = dbMenuCardMapper.deletePizza(pizzaNo);
         if (result){
@@ -251,7 +262,7 @@ public class MainMenu {
 
     }
 
-    private void showSinglePizza() {
+    private void showSinglePizza() throws CustomExceptions {
         int pizzaNo = Input.getInt("Indtast pizzanummer: ");
         Pizza pizza = dbMenuCardMapper.getPizzaById(pizzaNo);
         if (pizza != null){
@@ -262,7 +273,7 @@ public class MainMenu {
         }
     }
 
-    private void updateOrder() {
+    private void updateOrder() throws CustomExceptions {
         System.out.println("***** Opdater Ordre *******");
         int ordreId = Input.getInt("Hvilket ordre id vil du rette: ");
         System.out.println("Indtast ny værdi, hvis den skal rettes - eller blot <retur>: ");
@@ -298,29 +309,30 @@ public class MainMenu {
         }
     }
 
-    private void showMenuCard() {
+    private void showMenuCard() throws CustomExceptions {
         System.out.println("**** Menukort hos Marios ******");
 //        List<Pizza> menuCard = dbMenuCardMapper.getAllPizzas();
 //        for (Pizza pizza : menuCard) {
 //            System.out.println(pizza.toString());
 //        }
         List<Pizza> menuCard = dbMenuCardMapper.getAllPizzas();
-        for (Pizza pizza : menuCard) {
-            int pizzaNo = pizza.getPizzaNo();
-            String name = pizza.getName();
-            String ingredients = pizza.getIngredients();
-            double price = pizza.getPrice();
-            String text,dotLine;
-            int dotLenght = 100;
-            //  System.out.println("");
-            dotLine = ".";
-            text = pizzaNo + ". " + name + ": " + ingredients;
-            for (int i = 0; i < dotLenght - text.length(); i++) {
-                dotLine = dotLine + ".";
-            }
-            text = text + " " + dotLine + " " + price + " kr.";
-            System.out.println(text);
-        }
+          if (menuCard != null){
+                for (Pizza pizza : menuCard) {
+                    int pizzaNo = pizza.getPizzaNo();
+                    String name = pizza.getName();
+                    String ingredients = pizza.getIngredients();
+                    double price = pizza.getPrice();
+                    String text,dotLine;
+                    int dotLenght = 100;
+                    //  System.out.println("");
+                    dotLine = ".";
+                    text = pizzaNo + ". " + name + ": " + ingredients;
+                    for (int i = 0; i < dotLenght - text.length(); i++) {
+                        dotLine = dotLine + ".";
+                    }
+                    text = text + " " + dotLine + " " + price + " kr.";
+                    System.out.println(text);
+                }}
     }
 
 }

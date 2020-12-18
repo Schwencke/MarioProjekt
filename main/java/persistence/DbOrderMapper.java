@@ -1,9 +1,7 @@
 package persistence;
 import com.mysql.cj.x.protobuf.MysqlxCrud;
+import domain.*;
 import domain.Orders;
-import domain.Orders;
-import domain.Pizza;
-import domain.Statistics;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -17,7 +15,7 @@ public class DbOrderMapper {
         this.database = database;
     }
 
-    public boolean newOrder (Orders order){
+    public boolean newOrder (Orders order) throws CustomExceptions {
         boolean result = false;
         String sql = "insert into orders (pizza_no,amount,pickup_time,customer_name,phone) values (?,?,?,?,?)";
         try (Connection connection = database.connect()) {
@@ -32,9 +30,8 @@ public class DbOrderMapper {
                     result = true;
                 }
 
-            } catch (SQLException throwables) {
-                // TODO: Make own throwable exception and let it bubble upwards
-                throwables.printStackTrace();
+            } catch (SQLException e) {
+                throw new CustomExceptions("SQL FEJL");
             }
         } catch (SQLException throwables) {
             // TODO: Make own throwable exception and let it bubble upwards
@@ -43,7 +40,7 @@ public class DbOrderMapper {
 
 
     }
-    public List<Orders> readOrders() {
+    public List<Orders> readOrders() throws CustomExceptions {
 
         List<Orders> orders = new ArrayList<>();
 
@@ -64,9 +61,8 @@ public class DbOrderMapper {
                     boolean removed = rs.getBoolean("removed");
                     orders.add(new Orders(orderId, pizzaNo,amount,pickUpTime,orderTime,customerName,phoneNo,removed));
                 }}
-            } catch (SQLException throwables) {
-                // TODO: Make own throwable exception and let it bubble upwards
-                throwables.printStackTrace();
+            } catch (SQLException e) {
+                throw new CustomExceptions("SQL FEJL");
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -74,7 +70,7 @@ public class DbOrderMapper {
         return orders;
     }
 
-    public Orders getOrderById(int ordreId) {
+    public Orders getOrderById(int ordreId) throws CustomExceptions {
         Orders orders = null;
         String sql = "select * from orders where order_id = ?";
         try (Connection connection = database.connect()) {
@@ -90,9 +86,8 @@ public class DbOrderMapper {
                     String phone = rs.getString("phone");
                     orders = new Orders(orderId, pizzaNo, amount,pickupTime, customerName, phone);
                 }
-            } catch (SQLException throwables) {
-                // TODO: Make own throwable exception and let it bubble upwards
-                throwables.printStackTrace();
+            } catch (SQLException e) {
+                throw new CustomExceptions("SQL FEJL");
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -100,7 +95,7 @@ public class DbOrderMapper {
         return orders;
     }
 
-    public boolean updateOrders(Orders orders) {
+    public boolean updateOrders(Orders orders) throws CustomExceptions {
         boolean result = false;
         String sql = "update orders set pizza_no = ?, amount = ?, pickup_time = ?, customer_name = ?, phone = ? where order_id = ?";
       try {
@@ -116,9 +111,8 @@ public class DbOrderMapper {
                   if (rowsAffected >= 1) {
                       result = true;
                   }
-              } catch (SQLException throwables) {
-                  // TODO: Make own throwable exception and let it bubble upwards
-                  throwables.printStackTrace();
+              } catch (SQLException e) {
+                  throw new CustomExceptions("SQL FEJL");
               }}
           } catch (SQLException throwables) {
               // TODO: Make own throwable exception and let it bubble upwards
@@ -128,7 +122,7 @@ public class DbOrderMapper {
 
     }
 
-    public List<Statistics> statisticsArchived() {
+    public List<Statistics> statisticsArchived() throws CustomExceptions {
 
         List<Statistics> statisticsList = new ArrayList<>();
         String sql = "select * from orders where removed = ?";
@@ -147,15 +141,14 @@ public class DbOrderMapper {
                         statisticsList.add(new Statistics(orderID, pizzaNo, amount, pickupTime, orderTime, phone));
                     }
                 } catch (SQLException e) {
-                    System.out.println("Fejl i connection til databasen");
-                    e.printStackTrace();
+                throw new CustomExceptions("SQL FEJL");
                 }
             return statisticsList;
         }
 
 
 
-        public boolean removeOrder(int orderId){
+        public boolean removeOrder(int orderId) throws CustomExceptions {
 
         boolean result = false;
         String sql = "update orders set removed = 1 where order_id = ? ";
@@ -172,8 +165,8 @@ public class DbOrderMapper {
                    }
                }
            }
-       } catch (SQLException throwables) {
-           throwables.printStackTrace();
+       } catch (SQLException e) {
+           throw new CustomExceptions("SQL FEJL");
        }
             return result;
         }}

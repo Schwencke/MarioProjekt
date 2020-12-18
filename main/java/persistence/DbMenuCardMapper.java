@@ -1,5 +1,6 @@
 package persistence;
 
+import domain.CustomExceptions;
 import domain.Pizza;
 
 import java.sql.*;
@@ -14,12 +15,12 @@ public class DbMenuCardMapper {
         this.database = database;
     }
 
-    public List<Pizza> getAllPizzas() {
+    public List<Pizza> getAllPizzas() throws CustomExceptions {
 
         List<Pizza> pizzaList = new ArrayList<>();
 
         String sql = "select * from pizza";
-
+        if (database != null){
         try (Connection connection = database.connect()) {
             try (PreparedStatement ps = connection.prepareStatement(sql)) {
                 ResultSet rs = ps.executeQuery();
@@ -31,17 +32,17 @@ public class DbMenuCardMapper {
                     int price = rs.getInt("price");
                     pizzaList.add(new Pizza(pizza_id, pizza_no, name, ingredients, price));
                 }
-            } catch (SQLException throwables) {
-                // TODO: Make own throwable exception and let it bubble upwards
-                throwables.printStackTrace();
+            } catch (SQLException e) {
+                throw new CustomExceptions("SQL FEJL");
+
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
-        }
+        }} else System.out.println("Fejl i databasen");
         return pizzaList;
     }
 
-    public Pizza getPizzaById(int pizzaNo) {
+    public Pizza getPizzaById(int pizzaNo) throws CustomExceptions {
         Pizza pizza = null;
         String sql = "select * from pizza where pizza_no = ?";
         try (Connection connection = database.connect()) {
@@ -56,9 +57,8 @@ public class DbMenuCardMapper {
                     int price = rs.getInt("price");
                     pizza = new Pizza(pizza_id, pizza_no, name, ingredients, price);
                 }
-            } catch (SQLException throwables) {
-                // TODO: Make own throwable exception and let it bubble upwards
-                throwables.printStackTrace();
+            } catch (SQLException e) {
+                throw new CustomExceptions("SQL FEJL");
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -66,7 +66,7 @@ public class DbMenuCardMapper {
         return pizza;
     }
 
-    public boolean deletePizza(int pizzaNo){
+    public boolean deletePizza(int pizzaNo) throws CustomExceptions {
         boolean result = false;
         String sql = "delete from pizza where pizza_no = ?";
         try (Connection connection = database.connect()) {
@@ -76,9 +76,8 @@ public class DbMenuCardMapper {
                 if (rowsAffected == 1){
                     result = true;
                 }
-            } catch (SQLException throwables) {
-                // TODO: Make own throwable exception and let it bubble upwards
-                throwables.printStackTrace();
+            } catch (SQLException e) {
+                throw new CustomExceptions("SQL FEJL");
             }
         } catch (SQLException throwables) {
             // TODO: Make own throwable exception and let it bubble upwards
@@ -87,7 +86,7 @@ public class DbMenuCardMapper {
         return result;
     }
 
-    public Pizza insertPizza(Pizza pizza){
+    public Pizza insertPizza(Pizza pizza) throws CustomExceptions {
         boolean result = false;
         int newId = 0;
         String sql = "insert into pizza (pizza_no, name, ingredients, price) values (?,?,?,?)";
@@ -108,9 +107,8 @@ public class DbMenuCardMapper {
                 } else {
                     pizza = null;
                 }
-            } catch (SQLException throwables) {
-                // TODO: Make own throwable exception and let it bubble upwards
-                throwables.printStackTrace();
+            } catch (SQLException e) {
+                throw new CustomExceptions("SQL FEJL");
             }
         } catch (SQLException throwables) {
             // TODO: Make own throwable exception and let it bubble upwards
@@ -119,7 +117,7 @@ public class DbMenuCardMapper {
         return pizza;
     }
 
-    public boolean updatePizza(Pizza pizza) {
+    public boolean updatePizza(Pizza pizza) throws CustomExceptions {
         boolean result = false;
         String sql = "update pizza set pizza_no = ?, name = ?, ingredients = ?, price = ? where pizza_no = ?";
         try (Connection connection = database.connect()) {
@@ -133,9 +131,8 @@ public class DbMenuCardMapper {
                 if (rowsAffected >= 1){
                     result = true;
                 }
-            } catch (SQLException throwables) {
-                // TODO: Make own throwable exception and let it bubble upwards
-                throwables.printStackTrace();
+            } catch (SQLException e) {
+                throw new CustomExceptions("SQL FEJL");
             }
         } catch (SQLException throwables) {
             // TODO: Make own throwable exception and let it bubble upwards

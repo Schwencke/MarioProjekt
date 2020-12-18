@@ -1,5 +1,7 @@
 package persistence;
 
+import domain.CustomExceptions;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -11,27 +13,24 @@ public class Database {
     private final String PASSWORD;
     private final String URL;
 
-    public Database(String user, String password, String url) {
+    public Database(String user, String password, String url) throws CustomExceptions {
         USER = user;
         PASSWORD = password;
         URL = url;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
-            // TODO: Make own throwable exception and let it bubble upwards
-            e.printStackTrace();
-            System.out.println("Fejl ved instantiering af Driver klasse");
+           throw new CustomExceptions("Fejl ved instantiering af Driverklassen");
         }
     }
 
-    public Connection connect(){
+    public Connection connect() throws CustomExceptions {
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
         } catch (SQLException throwables) {
-            // TODO: Make own throwable exception and let it bubble upwards
-            throwables.printStackTrace();
-            System.out.println("Fejl under etablering af forbindelse til database");
+           throw new CustomExceptions("Fejl under etablering af forbindelse til database");
+
         }
         return connection;
     }
