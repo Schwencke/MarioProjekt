@@ -1,0 +1,16 @@
+Fri Dec 18 11:56:35 CET 2020
+domain.CustomExceptions: Fejl under etablering af forbindelse til database
+	at persistence.Database.connect(Database.java:32)
+	at persistence.DbMenuCardMapper.getAllPizzas(DbMenuCardMapper.java:24)
+	at ui.MainMenu.showMenuCard(MainMenu.java:324)
+	at ui.MainMenu.mainMenuLoop(MainMenu.java:51)
+	at Main.main(Main.java:9)
+
+Fri Dec 18 11:56:47 CET 2020
+domain.CustomExceptions: Fejl under etablering af forbindelse til database
+	at persistence.Database.connect(Database.java:32)
+	at persistence.DbMenuCardMapper.getAllPizzas(DbMenuCardMapper.java:24)
+	at ui.MainMenu.showMenuCard(MainMenu.java:324)
+	at ui.MainMenu.mainMenuLoop(MainMenu.java:51)
+	at Main.main(Main.java:9)
+

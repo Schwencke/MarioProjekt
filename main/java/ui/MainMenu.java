@@ -8,25 +8,33 @@ import org.w3c.dom.ls.LSOutput;
 import persistence.Database;
 import persistence.DbMenuCardMapper;
 import persistence.DbOrderMapper;
+import persistence.LogWriter;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainMenu {
 
-    private final String USER = "testdb_user";
+    private final String USER = "testdb_user4";
     private final String PASSWORD = "1234";
     private final String URL = "jdbc:mysql://localhost:3306/mario?serverTimezone=CET&useSSL=false";
 
     private Database database;
     private DbMenuCardMapper dbMenuCardMapper;
     private DbOrderMapper dbOrderMapper;
+    private boolean running = true;
+    LogWriter logWriter = new LogWriter();
+    StringWriter errorsToString = new StringWriter();
+
 
     public MainMenu() {
         try {
             this.database = new Database(USER,PASSWORD,URL);
         } catch (CustomExceptions e) {
-            e.getMessage();
+            System.out.println(e.getMessage());
+            this.running = false;
+            //TODO LOG DENNE TIL FIL e.printStackTrace();
         }
         this.dbOrderMapper = new DbOrderMapper(database);
         this.dbMenuCardMapper = new DbMenuCardMapper(database);
@@ -34,20 +42,23 @@ public class MainMenu {
 
     public void mainMenuLoop() throws CustomExceptions {
 
-        boolean running = true;
 
-        while (running) {
+
+        while (this.running) {
             showMenu();
             switch(Input.getInt("Vælg 1-5: ")){
                 case 1: newOrder(); break;
                 case 2: showMenuCard(); break;
                 case 3: showSinglePizza(); break;
                 case 4: admin(); break;
-                case 5: running = false; break;
+                case 5: this.running = false; break;
+                default:
+                    System.out.println("Du forsøger at tilgå et menupunkt der ikke eksistere"); break;
             }
         }
         System.out.println("Tak for denne gang!");
     }
+
     private void showMenu() {
         System.out.println("\n**** Marios pizzabar - HOVDEMENU ******");
         System.out.println("[1]Opret Ordre");
@@ -129,11 +140,6 @@ public class MainMenu {
             }
     }
 
-
-
-
-
-
     private void readOrder() throws CustomExceptions {
         List<Orders> ordersList = dbOrderMapper.readOrders();
         for (Orders orders : ordersList) {
@@ -182,6 +188,7 @@ public class MainMenu {
         }
 
     }
+
     private void orderEdit() throws CustomExceptions {
 
         System.out.println("**** Marios pizzabar - ORDREHÅNDTERING ******");
@@ -202,7 +209,6 @@ public class MainMenu {
         }
 
     }
-
 
     private void updatePizza() throws CustomExceptions {
         System.out.println("***** Opdater pizza *******");
@@ -315,7 +321,7 @@ public class MainMenu {
 //        for (Pizza pizza : menuCard) {
 //            System.out.println(pizza.toString());
 //        }
-        List<Pizza> menuCard = dbMenuCardMapper.getAllPizzas();
+       try{ List<Pizza> menuCard = dbMenuCardMapper.getAllPizzas();
           if (menuCard != null){
                 for (Pizza pizza : menuCard) {
                     int pizzaNo = pizza.getPizzaNo();
@@ -332,7 +338,15 @@ public class MainMenu {
                     }
                     text = text + " " + dotLine + " " + price + " kr.";
                     System.out.println(text);
-                }}
+                }}else this.running = false;} catch (CustomExceptions e){
+           System.out.println(e.getMessage());
+           e.printStackTrace(new PrintWriter(errorsToString));
+           logWriter.addLogMessageToFile(errorsToString.toString());
+           this.running = false;
+
+           }
+       }
+
     }
 
-}
+

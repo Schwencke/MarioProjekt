@@ -37,8 +37,8 @@ public class DbMenuCardMapper {
 
             }
         } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }} else System.out.println("Fejl i databasen");
+            throw new CustomExceptions("SQL FEJL");
+        }} else System.out.println("Der var en fejl i databaseforbindelsen");
         return pizzaList;
     }
 
