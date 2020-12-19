@@ -25,15 +25,16 @@ public class MainMenu {
     private boolean running = true;
     LogWriter logWriter = new LogWriter();
     StringWriter errorsToString = new StringWriter();
-
+    //TODO: Håndter ToString konvertering i LogWriter klassen
 
     public MainMenu() {
         try {
             this.database = new Database(USER,PASSWORD,URL);
         } catch (CustomExceptions e) {
             System.out.println(e.getMessage());
+            e.printStackTrace(new PrintWriter(errorsToString));
+            logWriter.addLogMessageToFile(errorsToString.toString());
             this.running = false;
-            //TODO LOG DENNE TIL FIL e.printStackTrace();
         }
         this.dbOrderMapper = new DbOrderMapper(database);
         this.dbMenuCardMapper = new DbMenuCardMapper(database);

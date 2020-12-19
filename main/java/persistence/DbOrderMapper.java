@@ -32,7 +32,6 @@ public class DbOrderMapper {
                 throw new CustomExceptions("SQL FEJL");
             }
         } catch (SQLException throwables) {
-            // TODO: Make own throwable exception and let it bubble upwards
             throwables.printStackTrace();
         }       return result;
 
@@ -113,7 +112,6 @@ public class DbOrderMapper {
                   throw new CustomExceptions("SQL FEJL");
               }}
           } catch (SQLException throwables) {
-              // TODO: Make own throwable exception and let it bubble upwards
               throwables.printStackTrace();
           }
           return result;

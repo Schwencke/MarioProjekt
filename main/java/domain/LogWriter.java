@@ -10,7 +10,7 @@ public class LogWriter {
     public void addLogMessageToFile(String message) {
 
         PrintWriter writer = null;
-        String fileName = "log.txt";
+        String fileName = "logFile.log";
         Date timeStamp = new Date();
 
         try {
