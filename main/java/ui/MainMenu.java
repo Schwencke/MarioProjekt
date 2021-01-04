@@ -17,7 +17,7 @@ public class MainMenu {
 
     private final String USER = "testdb_user";
     private final String PASSWORD = "1234";
-    private final String URL = "jdbc:mysql://localhost:3306/mario?serverTimezone=CET&useSSL=false";
+    private final String URL = "jdbc:mysql://localhost:3306/mario_db?serverTimezone=CET&useSSL=false";
 
     private Database database;
     private DbMenuCardMapper dbMenuCardMapper;
@@ -126,19 +126,26 @@ public class MainMenu {
     }
 
     private void statisticsTotal() throws CustomExceptions {
-        int amountSold;
-        int uiPizzaNo;
+
+
         List<Statistics> pizzaAmountSold = new ArrayList<>(dbOrderMapper.statisticsArchived());
-        for (Statistics statistics : pizzaAmountSold) {
 
-                uiPizzaNo = statistics.getPizzaNo();
-                amountSold = statistics.getAmount();
-                System.out.println("\nDer er solgt: " + amountSold + "stk");
-                System.out.println("af pizzavariant: " + dbMenuCardMapper.getPizzaById(uiPizzaNo).getName());
-                System.out.println("total omsætning på " + amountSold * dbMenuCardMapper.getPizzaById(uiPizzaNo).getPrice() + " kr");
-
+        for (int i = 0; i < pizzaAmountSold.toArray().length; i++) {
+            int amountSold =0;
+            for (Statistics statistics : pizzaAmountSold) {
+                if (statistics.getPizzaNo() == i) {
+                    amountSold += statistics.getAmount();
+                }
             }
-    }
+            if (amountSold >0 ) {
+                System.out.println("\nDer er solgt: " + amountSold + "stk");
+                System.out.println("af pizzavariant: " + dbMenuCardMapper.getPizzaById(i).getName());
+                System.out.println("total omsætning på " + amountSold * dbMenuCardMapper.getPizzaById(i).getPrice() + " kr");
+            }
+        }
+        }
+
+
 
     private void readOrder() throws CustomExceptions {
         List<Orders> ordersList = dbOrderMapper.readOrders();
